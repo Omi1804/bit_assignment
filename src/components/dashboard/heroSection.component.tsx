@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Circle, FileText, Play } from "lucide-react";
 import { carouselItems, checklistItems } from "@/constants/dashboard";
 
@@ -23,7 +24,11 @@ const HeroSection = () => {
 
   return (
     <section className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2 xl:gap-6">
-      <div className="rounded-md bg-[#E7F3F880] px-5 py-4">
+      <motion.div
+        whileHover={{ y: -2 }}
+        transition={{ duration: 0.18 }}
+        className="rounded-md bg-[#E7F3F880] px-5 py-4"
+      >
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-medium text-[#347FA9]">Latest from Bitscale</h2>
           <div className="flex items-center gap-1">
@@ -42,36 +47,51 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <div key={activeSlide.title} className="mt-4 flex flex-col gap-3 sm:flex-row">
-          <div
-            className="relative flex aspect-video w-full shrink-0 items-center justify-center overflow-hidden rounded-lg bg-cover bg-center sm:h-[97px] sm:w-[143px]"
-            style={{ backgroundImage: `url(${activeSlide.thumbnail})` }}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSlide.title}
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.24 }}
+            className="mt-4 flex flex-col gap-3 sm:flex-row"
           >
-            <div className="flex h-full w-full cursor-default flex-col items-center justify-center bg-black/50">
-              <a
-                href={activeSlide.videoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-white p-1.5"
-              >
-                <Play fill="#000" width={13} height={13} />
-              </a>
+            <div
+              className="relative flex aspect-video w-full shrink-0 items-center justify-center overflow-hidden rounded-lg bg-cover bg-center sm:h-[97px] sm:w-[143px]"
+              style={{ backgroundImage: `url(${activeSlide.thumbnail})` }}
+            >
+              <div className="flex h-full w-full cursor-default flex-col items-center justify-center bg-black/50">
+                <motion.a
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.94 }}
+                  href={activeSlide.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white p-1.5"
+                >
+                  <Play fill="#000" width={13} height={13} />
+                </motion.a>
+              </div>
             </div>
-          </div>
 
-          <div className="min-w-0 pt-0.5">
-            <h3 className="text-[13px] font-medium leading-tight text-[#1f2937]">
-              {activeSlide.title}
-            </h3>
-            <p className="mt-1 max-w-[360px] text-[12px] leading-5 text-[#7b8493]">
-              {activeSlide.description}
-            </p>
-            <p className="mt-1 text-[11px] font-medium text-[#a8b0bb]">Posted today</p>
-          </div>
-        </div>
-      </div>
+            <div className="min-w-0 pt-0.5">
+              <h3 className="text-[13px] font-medium leading-tight text-[#1f2937]">
+                {activeSlide.title}
+              </h3>
+              <p className="mt-1 max-w-[360px] text-[12px] leading-5 text-[#7b8493]">
+                {activeSlide.description}
+              </p>
+              <p className="mt-1 text-[11px] font-medium text-[#a8b0bb]">Posted today</p>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
 
-      <div className="rounded-md border border-[#E7F3F8] bg-linear-to-b from-[#E7F3F8] via-[#ffffff] to-[#ffffff] px-5 py-4">
+      <motion.div
+        whileHover={{ y: -2 }}
+        transition={{ duration: 0.18 }}
+        className="rounded-md border border-[#E7F3F8] bg-linear-to-b from-[#E7F3F8] via-[#ffffff] to-[#ffffff] px-5 py-4"
+      >
         <div className="flex items-start gap-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#4b5563] text-white p-1.5">
             <FileText />
@@ -88,7 +108,7 @@ const HeroSection = () => {
 
         <div className="mt-4 flex items-center gap-3">
           <div className="h-1 flex-1 overflow-hidden rounded-full bg-[#e6e9ee]">
-            <div
+            <motion.div
               className="h-full rounded-full bg-[#4f8a68] transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
@@ -102,9 +122,10 @@ const HeroSection = () => {
             const Icon = isDone ? CheckCircle2 : Circle;
 
             return (
-              <button
+              <motion.button
                 key={item.label}
                 type="button"
+                whileTap={{ scale: 0.98 }}
                 onClick={() =>
                   setCompletedSteps((currentSteps) =>
                     currentSteps.map((isStepDone, stepIndex) =>
@@ -121,11 +142,11 @@ const HeroSection = () => {
                 <span className="text-xs font-medium leading-none text-[#374151]">
                   {item.label}
                 </span>
-              </button>
+              </motion.button>
             );
           })}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Building2, Plus, Users } from "lucide-react";
 import DashBoardHeader from "@/components/dashboard/header.component";
 import HeroSection from "@/components/dashboard/heroSection.component";
@@ -11,6 +12,19 @@ const Page = () => {
   const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false);
   const [searchModalMode, setSearchModalMode] = useState<"people" | "companies">("people");
   const [createdGridCount, setCreatedGridCount] = useState(0);
+  const [showGridToast, setShowGridToast] = useState(false);
+
+  useEffect(() => {
+    if (!showGridToast) return;
+
+    const timer = window.setTimeout(() => setShowGridToast(false), 1800);
+    return () => window.clearTimeout(timer);
+  }, [showGridToast]);
+
+  function createGrid() {
+    setCreatedGridCount((count) => count + 1);
+    setShowGridToast(true);
+  }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-white">
@@ -28,7 +42,9 @@ const Page = () => {
           </div>
 
           <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 lg:w-auto lg:shrink-0 lg:flex lg:items-center lg:gap-3">
-            <button
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => {
                 setSearchModalMode("companies");
                 setIsPeopleModalOpen(true);
@@ -37,8 +53,10 @@ const Page = () => {
             >
               <Building2 className="h-4 w-4 text-[#5b8b6a]" strokeWidth={2.2} />
               <span>Find Companies</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => {
                 setSearchModalMode("people");
                 setIsPeopleModalOpen(true);
@@ -47,14 +65,16 @@ const Page = () => {
             >
               <Users className="h-4 w-4 text-[#7c4aa7]" strokeWidth={2.2} />
               <span>Find People</span>
-            </button>
-            <button
-              onClick={() => setCreatedGridCount((count) => count + 1)}
+            </motion.button>
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={createGrid}
               className="inline-flex h-9 items-center justify-center gap-1 rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow-[0_1px_2px_rgba(16,24,40,0.12)] cursor-pointer"
             >
               <Plus className="h-[18px] w-[18px]" strokeWidth={2.2} />
               <span>New Grid</span>
-            </button>
+            </motion.button>
           </div>
         </section>
 
@@ -62,9 +82,24 @@ const Page = () => {
         <GridsTable createdGridCount={createdGridCount} />
       </main>
 
-      {isPeopleModalOpen ? (
-        <PeopleSearchModal mode={searchModalMode} onClose={() => setIsPeopleModalOpen(false)} />
-      ) : null}
+      <AnimatePresence>
+        {showGridToast ? (
+          <motion.div
+            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.98 }}
+            className="fixed bottom-5 right-5 z-40 rounded-lg border border-green-100 bg-white px-4 py-3 text-sm font-medium text-gray-800 shadow-[0_12px_32px_rgba(15,23,42,0.16)]"
+          >
+            Draft grid added to My Grids
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isPeopleModalOpen ? (
+          <PeopleSearchModal mode={searchModalMode} onClose={() => setIsPeopleModalOpen(false)} />
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 };

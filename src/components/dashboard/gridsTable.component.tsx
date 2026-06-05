@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { rows } from "@/constants/dashboard";
 import { ArrowUp, Building2, ChevronDown, Ellipsis, List, Search, Star, Users } from "lucide-react";
 import { RowIcon } from "./rowIcon.component";
@@ -162,14 +163,18 @@ export default function GridsTable({ createdGridCount = 0 }: { createdGridCount?
               <th className="w-[10%] px-4 pb-3 text-center font-medium">Actions</th>
             </tr>
           </thead>
-          <tbody className="text-sm text-[#2f3642]">
+          <motion.tbody layout className="text-sm text-[#2f3642]">
             {visibleRows.map((row) => {
               const Icon = row.icon;
               const isStarred = starredRows.has(row.name);
               const isExpanded = expandedRows.has(row.name);
 
               return (
-                <tr
+                <motion.tr
+                  layout
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
                   key={row.name}
                   className={[
                     "border-b border-gray-100",
@@ -195,8 +200,9 @@ export default function GridsTable({ createdGridCount = 0 }: { createdGridCount?
                           />
                         ) : null}
                       </button>
-                      <button
+                      <motion.button
                         type="button"
+                        whileTap={{ scale: 0.9 }}
                         onClick={() => toggleStar(row.name)}
                         aria-label={`${isStarred ? "Unstar" : "Star"} ${row.name}`}
                       >
@@ -208,7 +214,7 @@ export default function GridsTable({ createdGridCount = 0 }: { createdGridCount?
                           )}
                           strokeWidth={2}
                         />
-                      </button>
+                      </motion.button>
                       <div className="flex w-[80px] shrink-0 items-center">
                         {row.connectors ? (
                           <div className="flex items-center -space-x-1">
@@ -245,22 +251,29 @@ export default function GridsTable({ createdGridCount = 0 }: { createdGridCount?
                     >
                       <Ellipsis className="h-5 w-5" strokeWidth={2} />
                     </button>
-                    {openActionRow === row.name ? (
-                      <div className="absolute right-8 top-8 z-20 w-32 rounded-lg border border-neutral-200 bg-white p-1 text-left shadow-lg">
-                        {["Open", "Rename", "Duplicate"].map((action) => (
-                          <button
-                            key={action}
-                            type="button"
-                            onClick={() => setOpenActionRow(null)}
-                            className="block w-full rounded-md px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50"
-                          >
-                            {action}
-                          </button>
-                        ))}
-                      </div>
-                    ) : null}
+                    <AnimatePresence>
+                      {openActionRow === row.name ? (
+                        <motion.div
+                          initial={{ opacity: 0, y: -4, scale: 0.98 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                          className="absolute right-8 top-8 z-20 w-32 rounded-lg border border-neutral-200 bg-white p-1 text-left shadow-lg"
+                        >
+                          {["Open", "Rename", "Duplicate"].map((action) => (
+                            <button
+                              key={action}
+                              type="button"
+                              onClick={() => setOpenActionRow(null)}
+                              className="block w-full rounded-md px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                              {action}
+                            </button>
+                          ))}
+                        </motion.div>
+                      ) : null}
+                    </AnimatePresence>
                   </td>
-                </tr>
+                </motion.tr>
               );
             })}
             {visibleRows.length === 0 ? (
@@ -270,7 +283,7 @@ export default function GridsTable({ createdGridCount = 0 }: { createdGridCount?
                 </td>
               </tr>
             ) : null}
-          </tbody>
+          </motion.tbody>
         </table>
       </div>
     </section>

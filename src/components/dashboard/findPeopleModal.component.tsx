@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { peopleFilters, peopleTableColumns } from "@/constants/modal";
 import { cn } from "@/utils/cn";
 import { ChevronDown, FileSearchCorner, LockKeyhole, Search, X } from "lucide-react";
@@ -31,6 +32,17 @@ export function PeopleSearchModal({
   const resultCount = previewState === "ready" ? previewRows.length : 0;
   const displayColumns = useMemo(() => peopleTableColumns, []);
 
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   function toggleFilter(filterKey: string) {
     setExpandedFilters((currentFilters) => {
       const nextFilters = new Set(currentFilters);
@@ -58,8 +70,17 @@ export function PeopleSearchModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 p-2 sm:p-4 lg:px-8 lg:py-10">
-      <section
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 p-2 sm:p-4 lg:px-8 lg:py-10"
+    >
+      <motion.section
+        initial={{ opacity: 0, y: 14, scale: 0.985 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 10, scale: 0.985 }}
+        transition={{ duration: 0.18 }}
         role="dialog"
         aria-modal="true"
         aria-labelledby="people-search-title"
@@ -83,34 +104,42 @@ export function PeopleSearchModal({
               {mode === "people" ? "Find People" : "Find Companies"}
             </h2>
             <div className="relative">
-              <button
+              <motion.button
                 type="button"
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setIsSavedSearchOpen((isOpen) => !isOpen)}
                 className="inline-flex h-6 items-center gap-2 rounded-[7px] bg-[#f4f5f7] px-3 text-xs font-medium text-gray-900"
               >
                 <ChevronDown className="h-3.5 w-3.5" strokeWidth={2.6} />
                 <span>Saved Search</span>
-              </button>
-              {isSavedSearchOpen ? (
-                <div className="absolute right-0 top-8 z-20 w-48 rounded-lg border border-neutral-200 bg-white p-1 shadow-lg">
-                  {["Sales leaders", "Founders in SaaS", "RevOps managers"].map((searchName) => (
-                    <button
-                      key={searchName}
-                      type="button"
-                      onClick={() => {
-                        setFilterValues((currentValues) => ({
-                          ...currentValues,
-                          "People Keyword-0": searchName,
-                        }));
-                        setIsSavedSearchOpen(false);
-                      }}
-                      className="block w-full rounded-md px-3 py-2 text-left text-xs font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      {searchName}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
+              </motion.button>
+              <AnimatePresence>
+                {isSavedSearchOpen ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                    className="absolute right-0 top-8 z-20 w-48 rounded-lg border border-neutral-200 bg-white p-1 shadow-lg"
+                  >
+                    {["Sales leaders", "Founders in SaaS", "RevOps managers"].map((searchName) => (
+                      <button
+                        key={searchName}
+                        type="button"
+                        onClick={() => {
+                          setFilterValues((currentValues) => ({
+                            ...currentValues,
+                            "People Keyword-0": searchName,
+                          }));
+                          setIsSavedSearchOpen(false);
+                        }}
+                        className="block w-full rounded-md px-3 py-2 text-left text-xs font-medium text-gray-700 hover:bg-gray-50"
+                      >
+                        {searchName}
+                      </button>
+                    ))}
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
             </div>
           </div>
 
@@ -217,69 +246,89 @@ export function PeopleSearchModal({
               ))}
             </div>
 
-            {previewState === "empty" ? (
-              <div className="flex min-h-[320px] flex-col items-center justify-center px-8 text-center md:h-[calc(100%-56px)]">
-                <Image
-                  src="/tasks.jpeg"
-                  alt="Tasks"
-                  width={350}
-                  height={170}
-                  className="h-auto w-full max-w-[280px] sm:max-w-[350px]"
-                />
+            <AnimatePresence mode="wait">
+              {previewState === "empty" ? (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="flex min-h-[320px] flex-col items-center justify-center px-8 text-center md:h-[calc(100%-56px)]"
+                >
+                  <Image
+                    src="/tasks.jpeg"
+                    alt="Tasks"
+                    width={350}
+                    height={170}
+                    className="h-auto w-full max-w-[280px] sm:max-w-[350px]"
+                  />
 
-                <p className="mt-5 max-w-[470px] text-xs font-medium leading-[1.5] text-gray-400">
-                  Start your Company search , preview, and import companies for enrichment by
-                  applying any filter in the left panel.
-                  <br />
-                  OR
-                  <br />
-                  Import companies from saved Search.
-                </p>
-              </div>
-            ) : null}
+                  <p className="mt-5 max-w-[470px] text-xs font-medium leading-[1.5] text-gray-400">
+                    Start your Company search , preview, and import companies for enrichment by
+                    applying any filter in the left panel.
+                    <br />
+                    OR
+                    <br />
+                    Import companies from saved Search.
+                  </p>
+                </motion.div>
+              ) : null}
 
-            {previewState === "loading" ? (
-              <div className="min-w-[900px]">
-                {Array.from({ length: 12 }).map((_, rowIndex) => (
-                  <div
-                    key={rowIndex}
-                    className="grid h-12 grid-cols-[90px_90px_138px_154px_134px_154px_150px] items-center border-b border-[#edf0f3] px-5"
-                  >
-                    {displayColumns.map((column, columnIndex) => (
-                      <span
-                        key={column}
-                        className={cn(
-                          "h-4 animate-pulse rounded bg-gray-200",
-                          columnIndex === 0 ? "w-10" : "w-[80%]",
-                        )}
-                      />
-                    ))}
-                  </div>
-                ))}
-              </div>
-            ) : null}
+              {previewState === "loading" ? (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="min-w-[900px]"
+                >
+                  {Array.from({ length: 12 }).map((_, rowIndex) => (
+                    <div
+                      key={rowIndex}
+                      className="grid h-12 grid-cols-[90px_90px_138px_154px_134px_154px_150px] items-center border-b border-[#edf0f3] px-5"
+                    >
+                      {displayColumns.map((column, columnIndex) => (
+                        <span
+                          key={column}
+                          className={cn(
+                            "h-4 animate-pulse rounded bg-gray-200",
+                            columnIndex === 0 ? "w-10" : "w-[80%]",
+                          )}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </motion.div>
+              ) : null}
 
-            {previewState === "ready" ? (
-              <div className="min-w-[900px]">
-                {previewRows.map((row) => (
-                  <div
-                    key={row.linkedinUrl}
-                    className="grid h-12 grid-cols-[90px_90px_138px_154px_134px_154px_150px] items-center border-b border-[#edf0f3] px-5 text-xs text-gray-700"
-                  >
-                    <span className="truncate font-medium">{row.name}</span>
-                    <span className="truncate">{row.title}</span>
-                    <span className="truncate">{row.headline}</span>
-                    <span className="truncate text-blue-600">{row.linkedinUrl}</span>
-                    <span className="truncate">{row.company}</span>
-                    <span className="truncate text-blue-600">{row.companyUrl}</span>
-                    <span className="truncate">{row.companySize}</span>
-                  </div>
-                ))}
-              </div>
-            ) : null}
+              {previewState === "ready" ? (
+                <motion.div
+                  key="ready"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="min-w-[900px]"
+                >
+                  {previewRows.map((row) => (
+                    <div
+                      key={row.linkedinUrl}
+                      className="grid h-12 grid-cols-[90px_90px_138px_154px_134px_154px_150px] items-center border-b border-[#edf0f3] px-5 text-xs text-gray-700"
+                    >
+                      <span className="truncate font-medium">{row.name}</span>
+                      <span className="truncate">{row.title}</span>
+                      <span className="truncate">{row.headline}</span>
+                      <span className="truncate text-blue-600">{row.linkedinUrl}</span>
+                      <span className="truncate">{row.company}</span>
+                      <span className="truncate text-blue-600">{row.companyUrl}</span>
+                      <span className="truncate">{row.companySize}</span>
+                    </div>
+                  ))}
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
           </div>
         </section>
-      </section>
-    </div>
+      </motion.section>
+    </motion.div>
   );
 }

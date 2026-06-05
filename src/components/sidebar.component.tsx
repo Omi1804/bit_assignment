@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronRight, ChevronUp, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { navSections } from "@/constants/sidebar";
@@ -72,51 +73,64 @@ export const Sidebar = () => {
           <ChevronsUpDown className="h-4 w-4 shrink-0 text-gray-500" strokeWidth={2.2} />
         </button>
 
-        {isWorkspaceOpen ? (
-          <div className="absolute left-2 right-2 top-[calc(100%+8px)] z-30 rounded-xl border border-neutral-200 bg-white p-3 shadow-[0_10px_28px_rgba(15,23,42,0.14)] md:left-3 md:right-auto md:w-[320px]">
-            <p className="px-2 pb-3 text-sm font-medium text-gray-500">Workspaces</p>
-            <div className="space-y-1 border-b border-[#e5e7eb]">
-              {workspaces.map((workspace) => {
-                const isActive = workspace.id === activeWorkspaceId;
+        <AnimatePresence>
+          {isWorkspaceOpen ? (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              transition={{ duration: 0.16 }}
+              className="absolute left-2 right-2 top-[calc(100%+8px)] z-30 rounded-xl border border-neutral-200 bg-white p-3 shadow-[0_10px_28px_rgba(15,23,42,0.14)] md:left-3 md:right-auto md:w-[320px]"
+            >
+              <p className="px-2 pb-3 text-sm font-medium text-gray-500">Workspaces</p>
+              <div className="space-y-1 border-b border-[#e5e7eb]">
+                {workspaces.map((workspace) => {
+                  const isActive = workspace.id === activeWorkspaceId;
 
-                return (
-                  <button
-                    key={workspace.id}
-                    type="button"
-                    onClick={() => {
-                      setActiveWorkspaceId(workspace.id);
-                      setIsWorkspaceOpen(false);
-                    }}
-                    className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left hover:bg-gray-50"
-                  >
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-medium text-blue-600">
-                      {workspace.initial}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-xs font-medium text-gray-900">
-                        {workspace.name}
+                  return (
+                    <motion.button
+                      key={workspace.id}
+                      type="button"
+                      whileHover={{ x: 2 }}
+                      whileTap={{ scale: 0.99 }}
+                      onClick={() => {
+                        setActiveWorkspaceId(workspace.id);
+                        setIsWorkspaceOpen(false);
+                      }}
+                      className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left hover:bg-gray-50"
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-medium text-blue-600">
+                        {workspace.initial}
                       </span>
-                      <span className="block truncate text-xs text-gray-500">
-                        {workspace.email}
-                      </span>
-                    </span>
-                    {isActive ? (
-                      <span className="inline-flex items-center gap-2">
-                        <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600">
-                          Default
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-xs font-medium text-gray-900">
+                          {workspace.name}
                         </span>
-                        <Check className="h-4 w-4 text-blue-600" strokeWidth={2.4} />
+                        <span className="block truncate text-xs text-gray-500">
+                          {workspace.email}
+                        </span>
                       </span>
-                    ) : null}
-                  </button>
-                );
-              })}
-            </div>
-            <button className="mt-3 h-9 w-full rounded-lg bg-gray-200 text-sm font-medium text-gray-800 hover:bg-gray-300">
-              Join a workspace
-            </button>
-          </div>
-        ) : null}
+                      {isActive ? (
+                        <span className="inline-flex items-center gap-2">
+                          <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600">
+                            Default
+                          </span>
+                          <Check className="h-4 w-4 text-blue-600" strokeWidth={2.4} />
+                        </span>
+                      ) : null}
+                    </motion.button>
+                  );
+                })}
+              </div>
+              <motion.button
+                whileTap={{ scale: 0.99 }}
+                className="mt-3 h-9 w-full rounded-lg bg-gray-200 text-sm font-medium text-gray-800 hover:bg-gray-300"
+              >
+                Join a workspace
+              </motion.button>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col justify-between px-2 py-2 md:pb-4 md:pt-5">
@@ -138,9 +152,10 @@ export const Sidebar = () => {
                   const BadgeIcon = item.badge;
 
                   return (
-                    <button
+                    <motion.button
                       key={item.label}
                       type="button"
+                      whileTap={!item.disabled ? { scale: 0.98 } : undefined}
                       aria-disabled={item.disabled}
                       onClick={() => {
                         if (!item.disabled) {
@@ -176,7 +191,7 @@ export const Sidebar = () => {
                           <BadgeIcon className="h-3.5 w-3.5" strokeWidth={2.2} />
                         </span>
                       ) : null}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
