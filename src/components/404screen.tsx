@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const NotFoundScreen = () => {
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-[#f8fafc] px-6 py-16 text-slate-900">
+    <main className="flex min-h-dvh w-full fixed inset-0 items-center justify-center bg-[#f8fafc] px-6 py-16 text-slate-900">
       <section className="mx-auto flex w-full max-w-[420px] -translate-y-3 flex-col items-center text-center sm:-translate-y-5">
         <p className="text-[clamp(5.5rem,12vw,8rem)] leading-none font-bold text-[#e7eaf0]">404</p>
         <h1 className="mt-7 text-[28px] leading-tight font-semibold tracking-normal text-[#394150]">

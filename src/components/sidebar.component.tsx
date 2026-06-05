@@ -5,8 +5,8 @@ import { navSections } from "@/constants/sidebar";
 
 export const Sidebar = () => {
   return (
-    <aside className="flex h-full w-56 shrink-0 flex-col border-r border-[#e5e7eb] bg-white">
-      <div className="flex h-14 shrink-0 items-center border-b border-[#e5e7eb] px-5">
+    <aside className="flex w-full shrink-0 flex-col border-b border-[#e5e7eb] bg-white md:h-full md:w-56 md:border-b-0 md:border-r">
+      <div className="flex h-14 shrink-0 items-center border-b border-[#e5e7eb] px-4 sm:px-5">
         <Image
           src="/bitscale.svg"
           alt="Bitscale"
@@ -17,7 +17,7 @@ export const Sidebar = () => {
         />
       </div>
 
-      <div className="flex h-13 shrink-0 items-center justify-between border-b border-[#e5e7eb] px-5">
+      <div className="flex h-13 shrink-0 items-center justify-between border-b border-[#e5e7eb] px-4 sm:px-5">
         <div className="flex min-w-0 items-center gap-2">
           <div className="flex -space-x-3">
             <Image
@@ -40,12 +40,20 @@ export const Sidebar = () => {
         <ChevronsUpDown className="h-4 w-4 shrink-0 text-gray-500" strokeWidth={2.2} />
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col justify-between px-2 pb-4 pt-5">
-        <nav className="space-y-8" aria-label="Sidebar navigation">
+      <div className="flex min-h-0 flex-1 flex-col justify-between px-2 py-2 md:pb-4 md:pt-5">
+        <nav
+          className="flex gap-2 overflow-x-auto md:block md:space-y-8 md:overflow-visible"
+          aria-label="Sidebar navigation"
+        >
           {navSections.map((section) => (
-            <section key={section.title} className="space-y-3">
-              <p className="px-3 text-xs font-medium leading-none text-gray-500">{section.title}</p>
-              <div className="space-y-1">
+            <section
+              key={section.title}
+              className="flex shrink-0 items-center gap-2 md:block md:space-y-3"
+            >
+              <p className="hidden px-3 text-xs font-medium leading-none text-gray-500 md:block">
+                {section.title}
+              </p>
+              <div className="flex gap-2 md:block md:space-y-1">
                 {section.items.map((item) => {
                   const Icon = item.icon;
                   const BadgeIcon = item.badge;
@@ -92,7 +100,7 @@ export const Sidebar = () => {
           ))}
         </nav>
 
-        <div className="bg-[#f3f4f6] px-3 py-4">
+        <div className="hidden bg-[#f3f4f6] px-3 py-4 md:block">
           <div className="flex items-center justify-between">
             <Image
               src="/bitscale.svg"

@@ -1,13 +1,23 @@
 import { rows } from "@/constants/dashboard";
-import { Building2, ChevronDown, Ellipsis, List, MoveUp, Search, Star, Users } from "lucide-react";
+import {
+  ArrowUp,
+  Building2,
+  ChevronDown,
+  Ellipsis,
+  List,
+  MoveUp,
+  Search,
+  Star,
+  Users,
+} from "lucide-react";
 import { RowIcon } from "./rowIcon.component";
 import Avatar from "../ui/Avatar";
 
 export default function GridsTable() {
   return (
     <section className="mt-8">
-      <div className="flex items-end justify-between gap-6">
-        <div className="flex items-end">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between md:gap-6">
+        <div className="flex w-full items-end md:w-auto">
           <button className="h-10 flex-1 px-5 border-b border-[#2563eb] text-sm font-medium text-[#2563eb] text-nowrap">
             My Grids
           </button>
@@ -16,8 +26,8 @@ export default function GridsTable() {
           </button>
         </div>
 
-        <div className="flex items-center gap-4">
-          <label className="flex h-9 w-[350px] items-center gap-4 rounded-[10px] bg-gray-100 px-4 text-[#6b7280]">
+        <div className="flex w-full items-center gap-3 md:w-auto md:gap-4">
+          <label className="flex h-9 min-w-0 flex-1 items-center gap-4 rounded-[10px] bg-gray-100 px-4 text-[#6b7280] md:w-[350px] md:flex-none">
             <Search width={16} height={16} strokeWidth={2.2} />
             <span className="sr-only">Search grids and workbooks</span>
             <input
@@ -35,14 +45,14 @@ export default function GridsTable() {
         </div>
       </div>
 
-      <div className="mt-7 overflow-hidden">
-        <table className="w-full border-collapse text-left">
+      <div className="mt-7 overflow-x-auto">
+        <table className="min-w-[860px] w-full border-collapse text-left">
           <thead>
             <tr className="border-b border-neutral-200 tracking-wide text-xs font-medium text-[#1f2937]">
               <th className="w-[58%] px-5 pb-3 font-medium">
                 <span className="ml-12 inline-flex items-center gap-3">
                   Name
-                  <MoveUp className="h-3.5 w-3.5" strokeWidth={2.2} />
+                  <ArrowUp className="h-3.5 w-3.5" strokeWidth={2.2} />
                 </span>
               </th>
               <th className="w-[18%] px-4 pb-3 font-medium">Edited by</th>

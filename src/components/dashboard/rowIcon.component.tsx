@@ -1,15 +1,5 @@
-import { avatarClasses, iconToneClasses, rows } from "@/constants/dashboard";
-import {
-  ArrowUp,
-  Building2,
-  ChevronDown,
-  Ellipsis,
-  List,
-  MoveUp,
-  Search,
-  Star,
-  Users,
-} from "lucide-react";
+import { iconToneClasses } from "@/constants/dashboard";
+import { Building2 } from "lucide-react";
 
 export function RowIcon({
   icon: Icon,

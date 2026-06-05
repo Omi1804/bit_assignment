@@ -1,32 +1,50 @@
-import { CheckCircle2, Circle, FileCheck2, FileText, Play } from "lucide-react";
-import React from "react";
+"use client";
 
-const checklistItems = [
-  { label: "Create your data list", done: true },
-  { label: "Learn about BitAgent", done: true },
-  { label: "Connect an integration", done: true },
-  { label: "Customise waterfall providers", done: false },
-];
+import { useEffect, useState } from "react";
+import { CheckCircle2, Circle, FileText, Play } from "lucide-react";
+import { carouselItems, checklistItems } from "@/constants/dashboard";
 
 const HeroSection = () => {
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const activeSlide = carouselItems[activeSlideIndex];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlideIndex((currentIndex) => (currentIndex + 1) % carouselItems.length);
+    }, 3000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
-    <section className="mt-6 grid grid-cols-2 gap-6">
+    <section className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2 xl:gap-6">
       <div className="rounded-md bg-[#E7F3F880] px-5 py-4">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-medium text-[#347FA9]">Latest from Bitscale</h2>
           <div className="flex items-center gap-1">
-            <span className="h-1.5 w-7 rounded-full bg-[#4e86b2]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#9ec0d8]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#9ec0d8]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#9ec0d8]" />
+            {carouselItems.map((item, index) => (
+              <button
+                key={item.title}
+                type="button"
+                aria-label={`Show ${item.title}`}
+                onClick={() => setActiveSlideIndex(index)}
+                className={[
+                  "h-1.5 rounded-full transition-all",
+                  activeSlideIndex === index ? "w-7 bg-[#4e86b2]" : "w-1.5 bg-[#9ec0d8]",
+                ].join(" ")}
+              />
+            ))}
           </div>
         </div>
 
-        <div className="mt-4 flex gap-3">
-          <div className="h-[97px] w-[143px] rounded-lg flex justify-center items-center bg-center bg-cover relative bg-[url('https://img.youtube.com/vi/2JroEREiBLw/maxresdefault.jpg')] overflow-hidden">
-            <div className="flex-col cursor-default  w-full h-full bg-black/50  flex justify-center items-center">
+        <div key={activeSlide.title} className="mt-4 flex flex-col gap-3 sm:flex-row">
+          <div
+            className="relative flex aspect-video w-full shrink-0 items-center justify-center overflow-hidden rounded-lg bg-cover bg-center sm:h-[97px] sm:w-[143px]"
+            style={{ backgroundImage: `url(${activeSlide.thumbnail})` }}
+          >
+            <div className="flex h-full w-full cursor-default flex-col items-center justify-center bg-black/50">
               <a
-                href="https://www.youtube.com/embed/wSruLMPiwHA"
+                href={activeSlide.videoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full bg-white p-1.5"
@@ -38,11 +56,10 @@ const HeroSection = () => {
 
           <div className="min-w-0 pt-0.5">
             <h3 className="text-[13px] font-medium leading-tight text-[#1f2937]">
-              How to Integrate 2 Way HubSpot
+              {activeSlide.title}
             </h3>
             <p className="mt-1 max-w-[360px] text-[12px] leading-5 text-[#7b8493]">
-              Prerequisites for this Integration is that you should have a HubSpot account and Copy
-              the API key. We simple add our API key through the integrations pa...
+              {activeSlide.description}
             </p>
             <p className="mt-1 text-[11px] font-medium text-[#a8b0bb]">Posted today</p>
           </div>
@@ -71,7 +88,7 @@ const HeroSection = () => {
           <span className="text-xs font-medium text-[#5c936d]">75%</span>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-x-14 gap-y-4">
+        <div className="mt-5 grid grid-cols-1 gap-x-14 gap-y-4 sm:grid-cols-2">
           {checklistItems.map((item) => {
             const Icon = item.done ? CheckCircle2 : Circle;
 

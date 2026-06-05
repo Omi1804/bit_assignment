@@ -117,3 +117,41 @@ export const avatarClasses: Record<string, string> = {
   alex: "bg-[radial-gradient(circle_at_50%_28%,#e3c1a1_0_17%,transparent_18%),linear-gradient(135deg,#f8fafc_0_52%,#243041_53%)]",
   drew: "bg-[radial-gradient(circle_at_50%_27%,#e7b09a_0_17%,transparent_18%),linear-gradient(135deg,#8a1025_0_55%,#f8d3c5_56%)]",
 };
+
+export const checklistItems = [
+  { label: "Create your data list", done: true },
+  { label: "Learn about BitAgent", done: true },
+  { label: "Connect an integration", done: true },
+  { label: "Customise waterfall providers", done: false },
+];
+
+export const carouselItems = [
+  {
+    title: "How to Integrate 2 Way HubSpot",
+    description:
+      "Prerequisites for this Integration is that you should have a HubSpot account and Copy the API key. We simple add our API key through the integrations pa...",
+    thumbnail: "https://img.youtube.com/vi/2JroEREiBLw/maxresdefault.jpg",
+    videoUrl: "https://www.youtube.com/embed/wSruLMPiwHA",
+  },
+  {
+    title: "Introducing Grid Scheduling",
+    description:
+      "This walkthrough covers how you can find the top performing posts on LinkedIn based on a keyword and all information of the people who posted...",
+    thumbnail: "https://img.youtube.com/vi/tz82ola3oy0/maxresdefault.jpg",
+    videoUrl: "https://www.youtube.com/embed/2JroEREiBLw",
+  },
+  {
+    title: "Build enrichment workflows faster",
+    description:
+      "Learn how to connect data sources, preview results, and enrich your workbook without leaving your Bitscale dashboard...",
+    thumbnail: "https://img.youtube.com/vi/2JroEREiBLw/hqdefault.jpg",
+    videoUrl: "https://www.youtube.com/embed/wSruLMPiwHA",
+  },
+  {
+    title: "Automate prospect research",
+    description:
+      "Use saved searches, company filters, and grid actions to keep your prospecting workflow moving with less manual work...",
+    thumbnail: "https://img.youtube.com/vi/wSruLMPiwHA/hqdefault.jpg",
+    videoUrl: "https://www.youtube.com/embed/2JroEREiBLw",
+  },
+];
