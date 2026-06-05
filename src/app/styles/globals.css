@@ -5,6 +5,10 @@ html {
   overscroll-behavior: none;
 }
 
+:root {
+  --bit-dark-green: #438361;
+}
+
 body {
   font-family: "Inter", sans-serif;
 }

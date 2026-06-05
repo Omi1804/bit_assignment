@@ -1,50 +1,7 @@
 import Image from "next/image";
-import {
-  BookOpen,
-  ChevronRight,
-  ChevronUp,
-  ChevronsUpDown,
-  LayoutGrid,
-  Link2,
-  Rocket,
-  Settings,
-} from "lucide-react";
-
-const navSections = [
-  {
-    title: "Home",
-    items: [
-      {
-        label: "My Dashboard",
-        icon: LayoutGrid,
-        active: true,
-      },
-      {
-        label: "Playbooks",
-        icon: BookOpen,
-        disabled: true,
-        badge: Rocket,
-      },
-      {
-        label: "Integrations",
-        icon: Link2,
-      },
-    ],
-  },
-  {
-    title: "Other",
-    items: [
-      {
-        label: "Documnetation",
-        icon: BookOpen,
-      },
-      {
-        label: "Settings",
-        icon: Settings,
-      },
-    ],
-  },
-];
+import { ChevronRight, ChevronUp, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/utils/cn";
+import { navSections } from "@/constants/sidebar";
 
 export const Sidebar = () => {
   return (
@@ -53,34 +10,41 @@ export const Sidebar = () => {
         <Image
           src="/bitscale.svg"
           alt="Bitscale"
-          width={266}
+          width={100}
           height={59}
           priority
-          className="h-auto w-[128px]"
+          className="h-auto w-24"
         />
       </div>
 
-      <div className="flex h-[52px] shrink-0 items-center justify-between border-b border-[#e5e7eb] px-8">
-        <div className="flex min-w-0 items-center gap-4">
-          <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-[#c89b72]">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_35%_35%,#f0caa1_0_19%,transparent_20%),radial-gradient(circle_at_66%_33%,#243245_0_15%,transparent_16%),linear-gradient(135deg,#b87845,#e5b27a_45%,#4c5665_46%,#1f2937)]" />
-            <div className="absolute bottom-0 left-[9px] h-4 w-[7px] rounded-t-full bg-[#172033]" />
-            <div className="absolute bottom-0 right-[8px] h-[18px] w-[9px] rounded-t-full bg-[#111827]" />
+      <div className="flex h-13 shrink-0 items-center justify-between border-b border-[#e5e7eb] px-5">
+        <div className="flex min-w-0 items-center gap-2">
+          <div className="flex -space-x-3">
+            <Image
+              height={32}
+              width={32}
+              src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="User Avatar"
+              className="h-6 w-6 shrink-0 rounded-full object-cover"
+            />
+            <Image
+              height={32}
+              width={32}
+              src="https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?q=80&w=1365&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="User Avatar"
+              className="h-6 w-6 shrink-0 rounded-full object-cover"
+            />
           </div>
-          <p className="truncate text-[15px] font-semibold tracking-normal text-[#1f2937]">
-            GTM Spaces
-          </p>
+          <p className="truncate text-sm font-medium text-gray-800">GTM Spaces</p>
         </div>
-        <ChevronsUpDown className="h-5 w-5 shrink-0 text-[#6b7280]" strokeWidth={2.2} />
+        <ChevronsUpDown className="h-4 w-4 shrink-0 text-gray-500" strokeWidth={2.2} />
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col justify-between px-4 pb-4 pt-5">
+      <div className="flex min-h-0 flex-1 flex-col justify-between px-2 pb-4 pt-5">
         <nav className="space-y-8" aria-label="Sidebar navigation">
           {navSections.map((section) => (
             <section key={section.title} className="space-y-3">
-              <p className="px-3 text-[13px] font-medium leading-none text-[#6b7280]">
-                {section.title}
-              </p>
+              <p className="px-3 text-xs font-medium leading-none text-gray-500">{section.title}</p>
               <div className="space-y-1">
                 {section.items.map((item) => {
                   const Icon = item.icon;
@@ -92,22 +56,32 @@ export const Sidebar = () => {
                       href="#"
                       aria-disabled={item.disabled}
                       className={[
-                        "flex h-9 items-center gap-3 rounded-[8px] px-3 text-[15px] font-medium transition-colors",
+                        "flex h-9 items-center gap-2 rounded-[8px] px-3 text-[15px] font-medium transition-colors",
                         item.active
-                          ? "bg-[#f0f2f5] text-[#1559e6]"
+                          ? "bg-[#f0f2f5] text-blue-700"
                           : item.disabled
                             ? "pointer-events-none text-[#9ca3af]"
                             : "text-[#1f2937] hover:bg-[#f7f8fa]",
                       ].join(" ")}
                     >
-                      <Icon className="h-5 w-5 shrink-0" strokeWidth={item.active ? 2.2 : 2} />
-                      <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                      <Icon
+                        className={cn(
+                          "h-4 w-4 shrink-0",
+                          !item.disabled
+                            ? item.active
+                              ? "text-blue-500"
+                              : "text-gray-500"
+                            : "text-gray-400",
+                        )}
+                        strokeWidth={item.active ? 2.2 : 2}
+                      />
+                      <span className="min-w-0 flex-1 truncate text-sm">{item.label}</span>
                       {item.active ? (
-                        <ChevronRight className="h-5 w-5 shrink-0" strokeWidth={2.6} />
+                        <ChevronRight className="h-4 w-4 shrink-0" strokeWidth={2.6} />
                       ) : null}
                       {BadgeIcon ? (
                         <span className="ml-auto flex h-6 w-9 shrink-0 items-center justify-center rounded-full bg-[#fff3d8] text-[#d18a18]">
-                          <BadgeIcon className="h-4 w-4" strokeWidth={2.2} />
+                          <BadgeIcon className="h-3.5 w-3.5" strokeWidth={2.2} />
                         </span>
                       ) : null}
                     </a>
@@ -125,11 +99,11 @@ export const Sidebar = () => {
               alt="Bitscale"
               width={266}
               height={59}
-              className="h-auto w-[70px]"
+              className="h-auto w-16"
             />
-            <ChevronUp className="h-5 w-5 text-[#1f2937]" strokeWidth={2.5} />
+            <ChevronUp className="h-3.5 w-3.5 text-[#1f2937]" strokeWidth={2.5} />
           </div>
-          <p className="mt-1 text-[13px] font-medium leading-tight text-[#4b5563]">
+          <p className="mt-2 text-xs font-medium leading-tight text-[#4b5563]">
             Get Support at Bitscale
           </p>
         </div>
