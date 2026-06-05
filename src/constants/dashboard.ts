@@ -1,0 +1,108 @@
+import { Building2, FileText, MapPin, Users } from "lucide-react";
+
+export const rows = [
+  {
+    name: "Workbook - Testing design Ideas for grid and workbook",
+    editor: "Sam Taylor",
+    avatar: "sam",
+    icon: Building2,
+    iconTone: "green",
+    starred: false,
+    expanded: true,
+    highlighted: true,
+    connectors: ["people", "hubspot", "company"],
+  },
+  {
+    name: "LinkedIn",
+    editor: "Chris Parker",
+    avatar: "chris",
+    iconLabel: "in",
+    iconTone: "blue",
+    highlighted: true,
+  },
+  {
+    name: "Sales nav",
+    editor: "Jone Doe",
+    avatar: "jone",
+    iconLabel: "◎",
+    iconTone: "sky",
+    highlighted: true,
+  },
+  {
+    name: "find company",
+    editor: "Alex Morgan",
+    avatar: "alex",
+    icon: Building2,
+    iconTone: "green",
+    starred: true,
+  },
+  {
+    name: "import csv",
+    editor: "Drew Wilson",
+    avatar: "drew",
+    icon: FileText,
+    iconTone: "brown",
+    starred: true,
+  },
+  {
+    name: "Find people",
+    editor: "Jone Doe",
+    avatar: "jone",
+    icon: Users,
+    iconTone: "purple",
+    starred: true,
+  },
+  {
+    name: "Google maps",
+    editor: "Jone Doe",
+    avatar: "jone",
+    icon: MapPin,
+    iconTone: "google",
+    starred: false,
+  },
+  {
+    name: "google search results",
+    editor: "Jone Doe",
+    avatar: "jone",
+    iconLabel: "G",
+    iconTone: "googleText",
+    starred: false,
+  },
+  {
+    name: "factors",
+    editor: "Jone Doe",
+    avatar: "jone",
+    iconLabel: "F",
+    iconTone: "red",
+    starred: false,
+  },
+  {
+    name: "Hubspot List - 10 (05 Aug 25)",
+    editor: "Jone Doe",
+    avatar: "jone",
+    iconLabel: "⌘",
+    iconTone: "orange",
+    starred: true,
+  },
+];
+
+export const iconToneClasses: Record<string, string> = {
+  blue: "bg-[#eef6ff] text-[#2f7dbf]",
+  sky: "bg-[#eef8ff] text-[#428bc5]",
+  green: "bg-[#eef8f2] text-[#4f8a68]",
+  brown: "bg-[#fbf3ee] text-[#b9785f]",
+  purple: "bg-[#f6f0fb] text-[#8d5bb7]",
+  google: "bg-white text-[#4285f4]",
+  googleText: "bg-white text-[#4285f4]",
+  red: "bg-white text-[#ec635d]",
+  orange: "bg-white text-[#fb6d45]",
+};
+
+export const avatarClasses: Record<string, string> = {
+  sam: "bg-[radial-gradient(circle_at_52%_28%,#d9b08c_0_17%,transparent_18%),linear-gradient(135deg,#1f2937_0_50%,#3f5b6b_51%)]",
+  chris:
+    "bg-[radial-gradient(circle_at_50%_32%,#f3d2b1_0_18%,transparent_19%),linear-gradient(135deg,#f6efe8_0_55%,#c7d7e3_56%)]",
+  jone: "bg-[radial-gradient(circle_at_50%_30%,#efc78f_0_18%,transparent_19%),linear-gradient(135deg,#d88a2f_0_45%,#f1cd8a_46%)]",
+  alex: "bg-[radial-gradient(circle_at_50%_28%,#e3c1a1_0_17%,transparent_18%),linear-gradient(135deg,#f8fafc_0_52%,#243041_53%)]",
+  drew: "bg-[radial-gradient(circle_at_50%_27%,#e7b09a_0_17%,transparent_18%),linear-gradient(135deg,#8a1025_0_55%,#f8d3c5_56%)]",
+};

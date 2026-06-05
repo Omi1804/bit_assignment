@@ -5,6 +5,7 @@ import { Building2, Plus, Users } from "lucide-react";
 import DashBoardHeader from "@/components/dashboard/header.component";
 import HeroSection from "@/components/dashboard/heroSection.component";
 import { PeopleSearchModal } from "@/components/dashboard/findPeopleModal.component";
+import GridsTable from "@/components/dashboard/gridsTable.component";
 
 const Page = () => {
   const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false);
@@ -44,6 +45,7 @@ const Page = () => {
         </section>
 
         <HeroSection />
+        <GridsTable />
       </main>
 
       {isPeopleModalOpen ? <PeopleSearchModal onClose={() => setIsPeopleModalOpen(false)} /> : null}

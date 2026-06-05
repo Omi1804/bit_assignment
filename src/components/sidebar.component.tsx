@@ -56,7 +56,7 @@ export const Sidebar = () => {
                       href="#"
                       aria-disabled={item.disabled}
                       className={[
-                        "flex h-9 items-center gap-2 rounded-[8px] px-3 text-[15px] font-medium transition-colors",
+                        "flex h-9 items-center gap-2 rounded-sm px-3 text-[15px] font-medium transition-colors",
                         item.active
                           ? "bg-[#f0f2f5] text-blue-700"
                           : item.disabled
