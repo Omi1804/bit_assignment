@@ -1,4 +1,4 @@
-import { Building2, FileText, MapPin, Users } from "lucide-react";
+import { Building2, Compass, FileText, MapPin, Users } from "lucide-react";
 
 export const rows = [
   {
@@ -7,6 +7,7 @@ export const rows = [
     avatar: "sam",
     icon: Building2,
     iconTone: "green",
+    avatarVarient: 1,
     starred: false,
     expanded: true,
     highlighted: true,
@@ -17,6 +18,7 @@ export const rows = [
     editor: "Chris Parker",
     avatar: "chris",
     iconLabel: "in",
+    avatarVarient: 2,
     iconTone: "blue",
     highlighted: true,
   },
@@ -24,7 +26,9 @@ export const rows = [
     name: "Sales nav",
     editor: "Jone Doe",
     avatar: "jone",
+    icon: Compass,
     iconLabel: "◎",
+    avatarVarient: 1,
     iconTone: "sky",
     highlighted: true,
   },
@@ -32,6 +36,7 @@ export const rows = [
     name: "find company",
     editor: "Alex Morgan",
     avatar: "alex",
+    avatarVarient: 2,
     icon: Building2,
     iconTone: "green",
     starred: true,
@@ -40,6 +45,7 @@ export const rows = [
     name: "import csv",
     editor: "Drew Wilson",
     avatar: "drew",
+    avatarVarient: 1,
     icon: FileText,
     iconTone: "brown",
     starred: true,
@@ -48,6 +54,7 @@ export const rows = [
     name: "Find people",
     editor: "Jone Doe",
     avatar: "jone",
+    avatarVarient: 2,
     icon: Users,
     iconTone: "purple",
     starred: true,
@@ -57,6 +64,7 @@ export const rows = [
     editor: "Jone Doe",
     avatar: "jone",
     icon: MapPin,
+    avatarVarient: 1,
     iconTone: "google",
     starred: false,
   },
@@ -64,6 +72,7 @@ export const rows = [
     name: "google search results",
     editor: "Jone Doe",
     avatar: "jone",
+    avatarVarient: 1,
     iconLabel: "G",
     iconTone: "googleText",
     starred: false,
@@ -74,6 +83,7 @@ export const rows = [
     avatar: "jone",
     iconLabel: "F",
     iconTone: "red",
+    avatarVarient: 2,
     starred: false,
   },
   {
@@ -82,6 +92,7 @@ export const rows = [
     avatar: "jone",
     iconLabel: "⌘",
     iconTone: "orange",
+    avatarVarient: 2,
     starred: true,
   },
 ];
