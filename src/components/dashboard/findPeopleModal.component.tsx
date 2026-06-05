@@ -1,9 +1,62 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import { peopleFilters, peopleTableColumns } from "@/constants/modal";
 import { cn } from "@/utils/cn";
 import { ChevronDown, FileSearchCorner, LockKeyhole, Search, X } from "lucide-react";
 import Image from "next/image";
+import { previewPeople } from "@/constants/sidebar";
 
-export function PeopleSearchModal({ onClose }: { onClose: () => void }) {
+export function PeopleSearchModal({
+  onClose,
+  mode = "people",
+}: {
+  onClose: () => void;
+  mode?: "people" | "companies";
+}) {
+  const [expandedFilters, setExpandedFilters] = useState(
+    () =>
+      new Set(
+        peopleFilters
+          .map((filter, index) => ({ key: `${filter.label}-${index}`, expanded: filter.expanded }))
+          .filter((filter) => filter.expanded)
+          .map((filter) => filter.key),
+      ),
+  );
+  const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+  const [isSavedSearchOpen, setIsSavedSearchOpen] = useState(false);
+  const [previewState, setPreviewState] = useState<"empty" | "loading" | "ready">("empty");
+  const [previewRows, setPreviewRows] = useState<typeof previewPeople>([]);
+
+  const resultCount = previewState === "ready" ? previewRows.length : 0;
+  const displayColumns = useMemo(() => peopleTableColumns, []);
+
+  function toggleFilter(filterKey: string) {
+    setExpandedFilters((currentFilters) => {
+      const nextFilters = new Set(currentFilters);
+
+      if (nextFilters.has(filterKey)) {
+        nextFilters.delete(filterKey);
+      } else {
+        nextFilters.add(filterKey);
+      }
+
+      return nextFilters;
+    });
+  }
+
+  function runPreview() {
+    setPreviewState("loading");
+    setPreviewRows([]);
+
+    window.setTimeout(() => {
+      const offset = Math.floor(Math.random() * previewPeople.length);
+      const generatedRows = [...previewPeople.slice(offset), ...previewPeople.slice(0, offset)];
+      setPreviewRows(generatedRows.slice(0, 4 + Math.floor(Math.random() * 2)));
+      setPreviewState("ready");
+    }, 1100);
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 p-2 sm:p-4 lg:px-8 lg:py-10">
       <section
@@ -27,41 +80,91 @@ export function PeopleSearchModal({ onClose }: { onClose: () => void }) {
               id="people-search-title"
               className="text-[18px] font-extrabold leading-none tracking-normal text-[#111827]"
             >
-              Find People
+              {mode === "people" ? "Find People" : "Find Companies"}
             </h2>
-            <button className="inline-flex h-6 items-center gap-2 rounded-[7px] bg-[#f4f5f7] px-3 text-xs font-medium text-gray-900">
-              <ChevronDown className="h-3.5 w-3.5" strokeWidth={2.6} />
-              <span>Saved Search</span>
-            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsSavedSearchOpen((isOpen) => !isOpen)}
+                className="inline-flex h-6 items-center gap-2 rounded-[7px] bg-[#f4f5f7] px-3 text-xs font-medium text-gray-900"
+              >
+                <ChevronDown className="h-3.5 w-3.5" strokeWidth={2.6} />
+                <span>Saved Search</span>
+              </button>
+              {isSavedSearchOpen ? (
+                <div className="absolute right-0 top-8 z-20 w-48 rounded-lg border border-neutral-200 bg-white p-1 shadow-lg">
+                  {["Sales leaders", "Founders in SaaS", "RevOps managers"].map((searchName) => (
+                    <button
+                      key={searchName}
+                      type="button"
+                      onClick={() => {
+                        setFilterValues((currentValues) => ({
+                          ...currentValues,
+                          "People Keyword-0": searchName,
+                        }));
+                        setIsSavedSearchOpen(false);
+                      }}
+                      className="block w-full rounded-md px-3 py-2 text-left text-xs font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                      {searchName}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           </div>
 
           <div className="mt-6 max-h-[30dvh] min-h-0 flex-1 overflow-x-hidden overflow-y-auto lg:max-h-[65vh]">
             {peopleFilters.map((filter, index) => {
               const Icon = filter.icon;
+              const filterKey = `${filter.label}-${index}`;
+              const isExpanded = expandedFilters.has(filterKey);
 
               return (
                 <div key={filter.label + index} className="border-b border-[#e5e7eb] py-4">
-                  <div className="flex items-center justify-between gap-4">
+                  <button
+                    type="button"
+                    onClick={() => toggleFilter(filterKey)}
+                    className="flex w-full items-center justify-between gap-4 text-left"
+                  >
                     <div className="flex items-center gap-3">
                       <Icon className="h-4 w-4 text-[#111827]" strokeWidth={2.4} />
                       <p className="text-sm font-semibold leading-none text-[#111827]">
                         {filter.label}
                       </p>
                     </div>
-                    {!filter.expanded ? (
-                      <ChevronDown className="h-5 w-5 text-[#111827]" strokeWidth={2.6} />
-                    ) : null}
-                  </div>
+                    <ChevronDown
+                      className={cn(
+                        "h-5 w-5 text-[#111827] transition-transform",
+                        isExpanded && "rotate-180",
+                      )}
+                      strokeWidth={2.6}
+                    />
+                  </button>
                   <div
                     className={cn(
                       "flex items-center gap-3 text-gray-500",
-                      filter.expanded ? "mt-4" : "mt-3",
+                      isExpanded ? "mt-4" : "mt-3",
                     )}
                   >
-                    {filter.expanded ? (
-                      <Search className="h-4 w-4 shrink-0" strokeWidth={2.2} />
-                    ) : null}
-                    <p className="text-sm font-normal leading-none">{filter.placeholder}</p>
+                    {isExpanded ? <Search className="h-4 w-4 shrink-0" strokeWidth={2.2} /> : null}
+                    {isExpanded ? (
+                      <input
+                        value={filterValues[filterKey] ?? ""}
+                        onChange={(event) =>
+                          setFilterValues((currentValues) => ({
+                            ...currentValues,
+                            [filterKey]: event.target.value,
+                          }))
+                        }
+                        placeholder={filter.placeholder}
+                        className="min-w-0 flex-1 bg-transparent text-sm font-normal outline-none placeholder:text-gray-500"
+                      />
+                    ) : (
+                      <p className="truncate text-sm font-normal">
+                        {filterValues[filterKey] || filter.placeholder}
+                      </p>
+                    )}
                   </div>
                 </div>
               );
@@ -69,13 +172,21 @@ export function PeopleSearchModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <button className="inline-flex h-[34px] w-full items-center justify-center gap-3 rounded-md bg-[#e4e8ee] text-xs font-medium text-gray-800 sm:w-[40%]">
+            <button
+              type="button"
+              onClick={() => setIsSavedSearchOpen(true)}
+              className="inline-flex h-[34px] w-full items-center justify-center gap-3 rounded-md bg-[#e4e8ee] text-xs font-medium text-gray-800 sm:w-[40%]"
+            >
               <FileSearchCorner className="h-4 w-4" />
               <span>Save Search</span>
             </button>
-            <button className="inline-flex h-[34px] w-full items-center justify-center gap-3 rounded-md bg-[#1f2937] text-sm font-medium text-white sm:w-[60%]">
+            <button
+              type="button"
+              onClick={runPreview}
+              className="inline-flex h-[34px] w-full items-center justify-center gap-3 rounded-md bg-[#1f2937] text-sm font-medium text-white sm:w-[60%]"
+            >
               <Image src="/eye.svg" alt="Eye" className="h-5 w-5" width={20} height={20} />
-              <span>Preview Result</span>
+              <span>{previewState === "loading" ? "Loading..." : "Preview Result"}</span>
             </button>
           </div>
         </aside>
@@ -89,7 +200,7 @@ export function PeopleSearchModal({ onClose }: { onClose: () => void }) {
           </div>
           <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4">
             <p className="text-xs font-medium text-gray-600 tracking-wide">
-              Found 0 companies. Click preview to view results
+              Found {resultCount} companies. Click preview to view results
             </p>
             <p className="inline-flex items-center gap-2 text-xs font-semibold text-[#CB912E]">
               <LockKeyhole className="h-3.5 w-3.5" strokeWidth={2.4} />
@@ -99,31 +210,73 @@ export function PeopleSearchModal({ onClose }: { onClose: () => void }) {
 
           <div className="h-[calc(100%-86px)] overflow-auto rounded-[9px] border border-[#edf0f3] bg-white shadow-[0_2px_8px_rgba(15,23,42,0.04)] md:h-[85%]">
             <div className="grid h-14 min-w-[900px] grid-cols-[90px_90px_138px_154px_134px_154px_150px] items-center bg-gray-50 px-5 text-[12px] font-semibold text-gray-500">
-              {peopleTableColumns.map((column) => (
+              {displayColumns.map((column) => (
                 <span key={column} className="truncate">
                   {column}
                 </span>
               ))}
             </div>
 
-            <div className="flex min-h-[320px] flex-col items-center justify-center px-8 text-center md:h-[calc(100%-56px)]">
-              <Image
-                src="/tasks.jpeg"
-                alt="Tasks"
-                width={350}
-                height={170}
-                className="h-auto w-full max-w-[280px] sm:max-w-[350px]"
-              />
+            {previewState === "empty" ? (
+              <div className="flex min-h-[320px] flex-col items-center justify-center px-8 text-center md:h-[calc(100%-56px)]">
+                <Image
+                  src="/tasks.jpeg"
+                  alt="Tasks"
+                  width={350}
+                  height={170}
+                  className="h-auto w-full max-w-[280px] sm:max-w-[350px]"
+                />
 
-              <p className="mt-5 max-w-[470px] text-xs font-medium leading-[1.5] text-gray-400">
-                Start your Company search , preview, and import companies for enrichment by applying
-                any filter in the left panel.
-                <br />
-                OR
-                <br />
-                Import companies from saved Search.
-              </p>
-            </div>
+                <p className="mt-5 max-w-[470px] text-xs font-medium leading-[1.5] text-gray-400">
+                  Start your Company search , preview, and import companies for enrichment by
+                  applying any filter in the left panel.
+                  <br />
+                  OR
+                  <br />
+                  Import companies from saved Search.
+                </p>
+              </div>
+            ) : null}
+
+            {previewState === "loading" ? (
+              <div className="min-w-[900px]">
+                {Array.from({ length: 12 }).map((_, rowIndex) => (
+                  <div
+                    key={rowIndex}
+                    className="grid h-12 grid-cols-[90px_90px_138px_154px_134px_154px_150px] items-center border-b border-[#edf0f3] px-5"
+                  >
+                    {displayColumns.map((column, columnIndex) => (
+                      <span
+                        key={column}
+                        className={cn(
+                          "h-4 animate-pulse rounded bg-gray-200",
+                          columnIndex === 0 ? "w-10" : "w-[80%]",
+                        )}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            {previewState === "ready" ? (
+              <div className="min-w-[900px]">
+                {previewRows.map((row) => (
+                  <div
+                    key={row.linkedinUrl}
+                    className="grid h-12 grid-cols-[90px_90px_138px_154px_134px_154px_150px] items-center border-b border-[#edf0f3] px-5 text-xs text-gray-700"
+                  >
+                    <span className="truncate font-medium">{row.name}</span>
+                    <span className="truncate">{row.title}</span>
+                    <span className="truncate">{row.headline}</span>
+                    <span className="truncate text-blue-600">{row.linkedinUrl}</span>
+                    <span className="truncate">{row.company}</span>
+                    <span className="truncate text-blue-600">{row.companyUrl}</span>
+                    <span className="truncate">{row.companySize}</span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
         </section>
       </section>

@@ -9,6 +9,8 @@ import GridsTable from "@/components/dashboard/gridsTable.component";
 
 const Page = () => {
   const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false);
+  const [searchModalMode, setSearchModalMode] = useState<"people" | "companies">("people");
+  const [createdGridCount, setCreatedGridCount] = useState(0);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-white">
@@ -26,18 +28,30 @@ const Page = () => {
           </div>
 
           <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 lg:w-auto lg:shrink-0 lg:flex lg:items-center lg:gap-3">
-            <button className="inline-flex h-9 items-center justify-center gap-3 rounded-md border border-neutral-200 bg-white px-4 text-[13px] font-medium text-gray-800 cursor-pointer">
+            <button
+              onClick={() => {
+                setSearchModalMode("companies");
+                setIsPeopleModalOpen(true);
+              }}
+              className="inline-flex h-9 items-center justify-center gap-3 rounded-md border border-neutral-200 bg-white px-4 text-[13px] font-medium text-gray-800 cursor-pointer"
+            >
               <Building2 className="h-4 w-4 text-[#5b8b6a]" strokeWidth={2.2} />
               <span>Find Companies</span>
             </button>
             <button
-              onClick={() => setIsPeopleModalOpen(true)}
+              onClick={() => {
+                setSearchModalMode("people");
+                setIsPeopleModalOpen(true);
+              }}
               className="inline-flex h-9 items-center justify-center gap-3 rounded-md border border-neutral-200 bg-white px-4 text-[13px] font-medium text-gray-800 transition-colors hover:bg-[#f8fafc] cursor-pointer"
             >
               <Users className="h-4 w-4 text-[#7c4aa7]" strokeWidth={2.2} />
               <span>Find People</span>
             </button>
-            <button className="inline-flex h-9 items-center justify-center gap-1 rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow-[0_1px_2px_rgba(16,24,40,0.12)] cursor-pointer">
+            <button
+              onClick={() => setCreatedGridCount((count) => count + 1)}
+              className="inline-flex h-9 items-center justify-center gap-1 rounded-md bg-gray-800 px-4 text-sm font-medium text-white shadow-[0_1px_2px_rgba(16,24,40,0.12)] cursor-pointer"
+            >
               <Plus className="h-[18px] w-[18px]" strokeWidth={2.2} />
               <span>New Grid</span>
             </button>
@@ -45,10 +59,12 @@ const Page = () => {
         </section>
 
         <HeroSection />
-        <GridsTable />
+        <GridsTable createdGridCount={createdGridCount} />
       </main>
 
-      {isPeopleModalOpen ? <PeopleSearchModal onClose={() => setIsPeopleModalOpen(false)} /> : null}
+      {isPeopleModalOpen ? (
+        <PeopleSearchModal mode={searchModalMode} onClose={() => setIsPeopleModalOpen(false)} />
+      ) : null}
     </div>
   );
 };

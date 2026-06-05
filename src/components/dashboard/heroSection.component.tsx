@@ -6,7 +6,12 @@ import { carouselItems, checklistItems } from "@/constants/dashboard";
 
 const HeroSection = () => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState(() =>
+    checklistItems.map((_, index) => index < 2),
+  );
   const activeSlide = carouselItems[activeSlideIndex];
+  const completedCount = completedSteps.filter(Boolean).length;
+  const progress = Math.round((completedCount / checklistItems.length) * 100);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -83,25 +88,40 @@ const HeroSection = () => {
 
         <div className="mt-4 flex items-center gap-3">
           <div className="h-1 flex-1 overflow-hidden rounded-full bg-[#e6e9ee]">
-            <div className="h-full w-3/4 rounded-full bg-[#4f8a68]" />
+            <div
+              className="h-full rounded-full bg-[#4f8a68] transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
           </div>
-          <span className="text-xs font-medium text-[#5c936d]">75%</span>
+          <span className="text-xs font-medium text-[#5c936d]">{progress}%</span>
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-x-14 gap-y-4 sm:grid-cols-2">
-          {checklistItems.map((item) => {
-            const Icon = item.done ? CheckCircle2 : Circle;
+          {checklistItems.map((item, index) => {
+            const isDone = completedSteps[index];
+            const Icon = isDone ? CheckCircle2 : Circle;
 
             return (
-              <div key={item.label} className="flex items-center gap-2">
+              <button
+                key={item.label}
+                type="button"
+                onClick={() =>
+                  setCompletedSteps((currentSteps) =>
+                    currentSteps.map((isStepDone, stepIndex) =>
+                      stepIndex === index ? !isStepDone : isStepDone,
+                    ),
+                  )
+                }
+                className="flex items-center gap-2 text-left"
+              >
                 <Icon
-                  className={item.done ? "h-4 w-4 text-[#4d86ae]" : "h-4 w-4 text-[#c8ced6]"}
-                  strokeWidth={item.done ? 3 : 2}
+                  className={isDone ? "h-4 w-4 text-[#4d86ae]" : "h-4 w-4 text-[#c8ced6]"}
+                  strokeWidth={isDone ? 3 : 2}
                 />
                 <span className="text-xs font-medium leading-none text-[#374151]">
                   {item.label}
                 </span>
-              </div>
+              </button>
             );
           })}
         </div>
